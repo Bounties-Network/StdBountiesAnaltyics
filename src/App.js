@@ -53,6 +53,7 @@ const App = props => (
               <LineChart
                 id="bountiesIssued"
                 title="Bounties Issued"
+                subtitle="These values are not cumulative (independent day to day)"
                 data={[{
                   name: 'Bounties Issued',
                   data: props.data.bountiesIssued
@@ -62,6 +63,23 @@ const App = props => (
                 }, {
                   name: 'Fulfillments Accepted',
                   data: props.data.fulfillmentsAccepted
+                }]}
+              />
+            </Col>
+            <Col md={24}>
+              <LineChart
+                id="bountiesIssuedCum"
+                title="Bounties Issued Cumulative"
+                subtitle="These values are cumulative over time"
+                data={[{
+                  name: 'Bounties Issued',
+                  data: props.data.bountiesIssuedCum
+                }, {
+                  name: 'Fulfillments Submitted',
+                  data: props.data.fulfillmentsSubmittedCum
+                }, {
+                  name: 'Fulfillments Accepted',
+                  data: props.data.fulfillmentsAcceptedCum
                 }]}
               />
             </Col>

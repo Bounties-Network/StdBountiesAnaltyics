@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Select, Button, DatePicker } from 'antd';
 import moment from 'moment';
+import config from '../config';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -16,17 +17,21 @@ class QueryForm extends Component {
     super(props);
     this.state = {
       range: [
-        moment('2018-01-02', dateFormat),
-        moment('2018-02-02', dateFormat)
+        moment(config.earliestDate, dateFormat),
+        moment()
       ],
-      schema: 'test'
+      schema: config.schemaList[0].value
     };
     this.handleChangeRange = this.handleChangeRange.bind(this);
     this.handleChangeSchema = this.handleChangeSchema.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentDidMount() {
-    this.props.form.validateFields();
+    this.props.form.validateFields((err) => {
+      if (!err) {
+        this.props.onQuery(this.state.schema, this.state.range);
+      }
+    });
   }
   handleChangeRange(value) {
     this.setState({ range: value });
@@ -55,12 +60,12 @@ class QueryForm extends Component {
     const schemaError = isFieldTouched('schema') && getFieldError('schema');
     const schemaOption = (
       <Select
-        style={{ width: 120 }}
+        style={{ width: 240 }}
         onChange={this.handleChangeSchema}
       >
-        <Option value="test">test</Option>
-        <Option value="all">all</Option>
-        <Option value="gitcoin">gitcoin</Option>
+        {config.schemaList.map(schema => (
+          <Option key={schema.value} value={schema.value}>{schema.name}</Option>
+          ))}
       </Select>
     );
     return (
@@ -75,6 +80,7 @@ class QueryForm extends Component {
           })(<RangePicker
             onChange={this.handleChangeRange}
             format={dateFormat}
+            disabledDate={currentDate => moment().isBefore(currentDate)}
           />)}
         </FormItem>
 

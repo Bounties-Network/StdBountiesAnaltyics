@@ -9,6 +9,9 @@ class LineChart extends React.Component {
       title: {
         text: this.props.title
       },
+      subtitle: {
+        text: this.props.subtitle
+      },
       legend: {
         layout: 'horizontal',
         align: 'center',
@@ -19,7 +22,16 @@ class LineChart extends React.Component {
           label: {
             connectorAllowed: false
           },
-          pointStart: 2018
+          pointStart: 2018,
+          marker: {
+            enabled: false,
+            states: {
+              hover: {
+                enabled: true,
+                radius: 3
+              }
+            }
+          }
         }
       },
       xAxis: {

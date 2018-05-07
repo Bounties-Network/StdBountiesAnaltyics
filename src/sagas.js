@@ -1,53 +1,18 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
 import axios from 'axios';
-import moment from 'moment';
 
 const dateFormat = 'YYYY-MM-DD';
 
-function dummy(fromDate, toDate) {
-  const data = [];
-  let date = moment(fromDate, dateFormat);
-
-  while (date < moment(toDate, dateFormat)) {
-    data.push({
-      date: date.format(dateFormat),
-      bounties_issued: Math.floor(Math.random() * 44),
-      fulfillments_submitted: Math.floor(Math.random() * 23),
-      fulfillments_accepted: Math.floor(Math.random() * 21),
-      fulfillments_pending_acceptance: Math.floor(Math.random() * 5),
-      fulfillment_acceptance_rate: Math.random(),
-      bounty_fulfilled_rate: Math.random(),
-      avg_fulfiller_acceptance_rate: Math.random(),
-      avg_fulfillment_amount: Math.random(),
-      total_fulfillment_amount: Math.floor(Math.random() * 184),
-      bounty_draft: Math.floor(Math.random() * 11),
-      bounty_active: Math.floor(Math.random() * 48),
-      bounty_completed: Math.floor(Math.random() * 22),
-      bounty_expired: Math.floor(Math.random() * 5),
-      bounty_dead: Math.floor(Math.random() * 11)
-    });
-    date = date.add(1, 'days');
-  }
-  return data;
-}
-
-function fetchData(schema, fromDate, toDate) {
-  if (schema === 'test') {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(Object.assign({}, {
-          data: dummy(fromDate, toDate)
-        }));
-      }, 1000);
-    });
-  }
+function fetchData(schema, since, until) {
   return axios({
     method: 'get',
     params: {
-      publish_date__range: `${fromDate},${toDate}`,
-      schema: (schema === 'all' ? null : schema)
+      format: 'json',
+      since,
+      until,
+      schema
     },
-    url: 'https://api.bounties.network/analytics/stats'
+    url: 'http://staging.api.bounties.network/analytics/'
   });
 }
 
@@ -68,6 +33,10 @@ function parseData(raw) {
   const fulfillmentsPendingAcceptance = [];
   const avgFulfillmentAmount = [];
 
+  const fulfillmentsSubmittedCum = [];
+  const fulfillmentsAcceptedCum = [];
+  const bountiesIssuedCum = [];
+
   for (let i = 0; i < raw.length; i += 1) {
     const date = Date.parse(raw[i].date);
     bountyDraft.push([date, raw[i].bounty_draft]);
@@ -86,6 +55,10 @@ function parseData(raw) {
 
     fulfillmentsPendingAcceptance.push([date, raw[i].fulfillments_pending_acceptance]);
     avgFulfillmentAmount.push([date, raw[i].avg_fulfillment_amount]);
+
+    fulfillmentsSubmittedCum.push([date, raw[i].fulfillments_submitted_cum]);
+    fulfillmentsAcceptedCum.push([date, raw[i].fulfillments_accepted_cum]);
+    bountiesIssuedCum.push([date, raw[i].bounties_issued_cum]);
   }
 
   return {
@@ -104,7 +77,11 @@ function parseData(raw) {
     fulfillmentsAccepted,
 
     fulfillmentsPendingAcceptance,
-    avgFulfillmentAmount
+    avgFulfillmentAmount,
+
+    bountiesIssuedCum,
+    fulfillmentsSubmittedCum,
+    fulfillmentsAcceptedCum
   };
 }
 
