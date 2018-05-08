@@ -27,7 +27,7 @@ const App = props => (
       <Spin spinning={props.fetching}>
         {props.data &&
           <Row>
-            <Col md={24}>
+            <Col md={12}>
               <LineChart
                 id="bountyStatesChart"
                 title="Bounty States"
@@ -49,41 +49,7 @@ const App = props => (
                 }]}
               />
             </Col>
-            <Col md={24}>
-              <LineChart
-                id="bountiesIssued"
-                title="Bounties Issued"
-                subtitle="These values are not cumulative (independent day to day)"
-                data={[{
-                  name: 'Bounties Issued',
-                  data: props.data.bountiesIssued
-                }, {
-                  name: 'Fulfillments Submitted',
-                  data: props.data.fulfillmentsSubmitted
-                }, {
-                  name: 'Fulfillments Accepted',
-                  data: props.data.fulfillmentsAccepted
-                }]}
-              />
-            </Col>
-            <Col md={24}>
-              <LineChart
-                id="bountiesIssuedCum"
-                title="Bounties Issued Cumulative"
-                subtitle="These values are cumulative over time"
-                data={[{
-                  name: 'Bounties Issued',
-                  data: props.data.bountiesIssuedCum
-                }, {
-                  name: 'Fulfillments Submitted',
-                  data: props.data.fulfillmentsSubmittedCum
-                }, {
-                  name: 'Fulfillments Accepted',
-                  data: props.data.fulfillmentsAcceptedCum
-                }]}
-              />
-            </Col>
-            <Col md={24}>
+            <Col md={12}>
               <LineChart
                 id="rateChart"
                 title="Fulfill Rate"
@@ -96,6 +62,56 @@ const App = props => (
                 }, {
                   name: 'Avg Fulfiller Acceptance Rate',
                   data: props.data.avgFulfillerAcceptanceRate
+                }]}
+              />
+            </Col>
+            <Col md={12}>
+              <LineChart
+                id="fulfillments"
+                title="Fulfillments"
+                subtitle="These values are not cumulative (independent day to day)"
+                data={[{
+                  name: 'Fulfillments Submitted',
+                  data: props.data.fulfillmentsSubmitted
+                }, {
+                  name: 'Fulfillments Accepted',
+                  data: props.data.fulfillmentsAccepted
+                }]}
+              />
+            </Col>
+            <Col md={12}>
+              <LineChart
+                id="fulfillmentsCum"
+                title="Fulfillments Cumulative"
+                subtitle="These values are cumulative over time"
+                data={[{
+                  name: 'Fulfillments Submitted',
+                  data: props.data.fulfillmentsSubmittedCum
+                }, {
+                  name: 'Fulfillments Accepted',
+                  data: props.data.fulfillmentsAcceptedCum
+                }]}
+              />
+            </Col>
+            <Col md={12}>
+              <LineChart
+                id="bountiesIssued"
+                title="Bounties Issued"
+                subtitle="These values are not cumulative (independent day to day)"
+                data={[{
+                  name: 'Bounties Issued',
+                  data: props.data.bountiesIssued
+                }]}
+              />
+            </Col>
+            <Col md={12}>
+              <LineChart
+                id="bountiesIssuedCum"
+                title="Bounties Issued Cumulative"
+                subtitle="These values are cumulative over time"
+                data={[{
+                  name: 'Bounties Issued',
+                  data: props.data.bountiesIssuedCum
                 }]}
               />
             </Col>

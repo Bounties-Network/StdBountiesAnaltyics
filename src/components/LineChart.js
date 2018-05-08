@@ -6,6 +6,9 @@ class LineChart extends React.Component {
   // When the DOM is ready, create the chart.
   componentDidMount() {
     this.chart = Highcharts.chart(this.props.id, {
+      chart: {
+        type: this.props.type
+      },
       title: {
         text: this.props.title
       },
