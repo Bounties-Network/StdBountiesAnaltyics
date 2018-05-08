@@ -12,7 +12,7 @@ function fetchData(schema, since, until) {
       until,
       schema
     },
-    url: 'http://staging.api.bounties.network/analytics/'
+    url: 'https://staging.api.bounties.network/analytics/'
   });
 }
 
