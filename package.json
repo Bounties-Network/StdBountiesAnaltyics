@@ -21,8 +21,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "lintfix": "eslint . --fix",
-    "deploy": "gh-pages -d build",
-    "deployS3": "deploy-aws-s3-cloudfront --source=./build/ --destination /StdBountiesAnaltyics --bucket bounties-dashboard"
+    "deploy": "deploy-aws-s3-cloudfront --source=./build/ --bucket analytics.bounties.network"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
@@ -36,5 +35,5 @@
     "deploy-aws-s3-cloudfront": "^0.2.9",
     "prettier": "^1.12.1"
   },
-  "homepage": "http://bakaoh.github.io/StdBountiesAnaltyics"
+  "homepage": "https://analytics.bounties.network"
 }
