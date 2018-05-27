@@ -18,7 +18,7 @@ class QueryForm extends Component {
     this.state = {
       range: [
         moment(config.earliestDate, dateFormat),
-        moment()
+        moment().utc()
       ],
       schema: config.schemaList[0].value
     };
