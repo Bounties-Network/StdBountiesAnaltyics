@@ -80,7 +80,7 @@ class QueryForm extends Component {
           })(<RangePicker
             onChange={this.handleChangeRange}
             format={dateFormat}
-            disabledDate={currentDate => moment().isBefore(currentDate)}
+            disabledDate={currentDate => moment().utc().isBefore(currentDate)}
           />)}
         </FormItem>
 
