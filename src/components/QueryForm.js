@@ -18,7 +18,7 @@ class QueryForm extends Component {
     this.state = {
       range: [
         moment(config.earliestDate, dateFormat),
-        moment()
+        moment().utc()
       ],
       schema: config.schemaList[0].value
     };
@@ -77,11 +77,16 @@ class QueryForm extends Component {
           {getFieldDecorator('range', {
             rules: [{ required: true, message: 'Please input date range!' }],
             initialValue: this.state.range
-          })(<RangePicker
-            onChange={this.handleChangeRange}
-            format={dateFormat}
-            disabledDate={currentDate => moment().isBefore(currentDate)}
-          />)}
+          })(
+          <div>
+            <RangePicker
+              onChange={this.handleChangeRange}
+              format={dateFormat}
+              disabledDate={currentDate => moment().utc().isBefore(currentDate)}
+            />
+            <h5>all times are based on UTC.</h5>
+          </div>
+          )}
         </FormItem>
 
         <FormItem
