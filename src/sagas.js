@@ -10,9 +10,10 @@ function fetchData(schema, since, until) {
       format: 'json',
       since,
       until,
-      schema
+      is_weekly: false,
+      schema,
     },
-    url: 'https://staging.api.bounties.network/analytics/'
+    url: 'https://api.bounties.network/analytics/'
   });
 }
 
