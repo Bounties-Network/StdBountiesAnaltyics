@@ -10,56 +10,58 @@ function fetchData(schema, since, until) {
       format: 'json',
       since,
       until,
-      is_weekly: false,
-      schema,
+      is_weekly: true,
+      schema
     },
-    url: 'https://api.bounties.network/analytics/'
+    url: 'https://staging.api.bounties.network/analytics/'
   });
 }
 
 function parseData(raw) {
-  const bountyDraft = [];
-  const bountyActive = [];
-  const bountyCompleted = [];
-  const bountyExpired = [];
-  const bountyDead = [];
+  const bountyDraft = [[], []];
+  const bountyActive = [[], []];
+  const bountyCompleted = [[], []];
+  const bountyExpired = [[], []];
+  const bountyDead = [[], []];
 
-  const fulfillmentAcceptanceRate = [];
-  const bountyFulfilledRate = [];
-  const avgFulfillerAcceptanceRate = [];
+  const fulfillmentAcceptanceRate = [[], []];
+  const bountyFulfilledRate = [[], []];
+  const avgFulfillerAcceptanceRate = [[], []];
 
-  const bountiesIssued = [];
-  const fulfillmentsSubmitted = [];
-  const fulfillmentsAccepted = [];
-  const fulfillmentsPendingAcceptance = [];
-  const avgFulfillmentAmount = [];
+  const bountiesIssued = [[], []];
+  const fulfillmentsSubmitted = [[], []];
+  const fulfillmentsAccepted = [[], []];
+  const fulfillmentsPendingAcceptance = [[], []];
+  const avgFulfillmentAmount = [[], []];
 
-  const fulfillmentsSubmittedCum = [];
-  const fulfillmentsAcceptedCum = [];
-  const bountiesIssuedCum = [];
+  const fulfillmentsSubmittedCum = [[], []];
+  const fulfillmentsAcceptedCum = [[], []];
+  const bountiesIssuedCum = [[], []];
 
   for (let i = 0; i < raw.length; i += 1) {
     const date = Date.parse(raw[i].date);
-    bountyDraft.push([date, raw[i].bounty_draft]);
-    bountyActive.push([date, raw[i].bounty_active]);
-    bountyCompleted.push([date, raw[i].bounty_completed]);
-    bountyExpired.push([date, raw[i].bounty_expired]);
-    bountyDead.push([date, raw[i].bounty_dead]);
+    const p = raw[i].is_week ? 1 : 0;
 
-    fulfillmentAcceptanceRate.push([date, raw[i].fulfillment_acceptance_rate]);
-    bountyFulfilledRate.push([date, raw[i].bounty_fulfilled_rate]);
-    avgFulfillerAcceptanceRate.push([date, raw[i].avg_fulfiller_acceptance_rate]);
+    bountyDraft[p].push([date, raw[i].bounty_draft]);
+    bountyActive[p].push([date, raw[i].bounty_active]);
+    bountyCompleted[p].push([date, raw[i].bounty_completed]);
+    bountyExpired[p].push([date, raw[i].bounty_expired]);
+    bountyDead[p].push([date, raw[i].bounty_dead]);
 
-    bountiesIssued.push([date, raw[i].bounties_issued]);
-    fulfillmentsSubmitted.push([date, raw[i].fulfillments_submitted]);
-    fulfillmentsAccepted.push([date, raw[i].fulfillments_accepted]);
+    fulfillmentAcceptanceRate[p].push([date, raw[i].fulfillment_acceptance_rate]);
+    bountyFulfilledRate[p].push([date, raw[i].bounty_fulfilled_rate]);
+    avgFulfillerAcceptanceRate[p].push([date, raw[i].avg_fulfiller_acceptance_rate]);
 
-    fulfillmentsPendingAcceptance.push([date, raw[i].fulfillments_pending_acceptance]);
-    avgFulfillmentAmount.push([date, raw[i].avg_fulfillment_amount]);
+    bountiesIssued[p].push([date, raw[i].bounties_issued]);
+    fulfillmentsSubmitted[p].push([date, raw[i].fulfillments_submitted]);
+    fulfillmentsAccepted[p].push([date, raw[i].fulfillments_accepted]);
 
-    fulfillmentsSubmittedCum.push([date, raw[i].fulfillments_submitted_cum]);
-    fulfillmentsAcceptedCum.push([date, raw[i].fulfillments_accepted_cum]);
-    bountiesIssuedCum.push([date, raw[i].bounties_issued_cum]);
+    fulfillmentsPendingAcceptance[p].push([date, raw[i].fulfillments_pending_acceptance]);
+    avgFulfillmentAmount[p].push([date, raw[i].avg_fulfillment_amount]);
+
+    fulfillmentsSubmittedCum[p].push([date, raw[i].fulfillments_submitted_cum]);
+    fulfillmentsAcceptedCum[p].push([date, raw[i].fulfillments_accepted_cum]);
+    bountiesIssuedCum[p].push([date, raw[i].bounties_issued_cum]);
   }
 
   return {

@@ -60,12 +60,22 @@ class QueryForm extends Component {
     const schemaError = isFieldTouched('schema') && getFieldError('schema');
     const schemaOption = (
       <Select
-        style={{ width: 240 }}
+        style={{ width: 150 }}
         onChange={this.handleChangeSchema}
       >
         {config.schemaList.map(schema => (
           <Option key={schema.value} value={schema.value}>{schema.name}</Option>
-          ))}
+        ))}
+      </Select>
+    );
+    const periodOption = (
+      <Select
+        style={{ width: 90 }}
+        onChange={this.props.handleChangePeriod}
+      >
+        <Option key="empty" value="">Default</Option>
+        <Option key="day" value="day">Daily</Option>
+        <Option key="week" value="week">Weekly</Option>
       </Select>
     );
     return (
@@ -74,19 +84,17 @@ class QueryForm extends Component {
           validateStatus={rangeError ? 'error' : ''}
           help={rangeError || ''}
         >
-          {getFieldDecorator('range', {
-            rules: [{ required: true, message: 'Please input date range!' }],
-            initialValue: this.state.range
-          })(
           <div>
-            <RangePicker
+            {getFieldDecorator('range', {
+              rules: [{ required: true, message: 'Please input date range!' }],
+              initialValue: this.state.range
+            })(<RangePicker
               onChange={this.handleChangeRange}
               format={dateFormat}
               disabledDate={currentDate => moment().utc().isBefore(currentDate)}
-            />
+            />)}
             <h5>all times are based on UTC.</h5>
           </div>
-          )}
         </FormItem>
 
         <FormItem
@@ -97,6 +105,13 @@ class QueryForm extends Component {
             rules: [{ required: true, message: 'Please select schema!' }],
             initialValue: this.state.schema
           })(schemaOption)}
+        </FormItem>
+
+        <FormItem>
+          {getFieldDecorator('period', {
+            rules: [{ required: false }],
+            initialValue: ''
+          })(periodOption)}
         </FormItem>
 
         <FormItem>
