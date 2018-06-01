@@ -84,19 +84,17 @@ class QueryForm extends Component {
           validateStatus={rangeError ? 'error' : ''}
           help={rangeError || ''}
         >
-          {getFieldDecorator('range', {
-            rules: [{ required: true, message: 'Please input date range!' }],
-            initialValue: this.state.range
-          })(
-            <div>
-              <RangePicker
-                onChange={this.handleChangeRange}
-                format={dateFormat}
-                disabledDate={currentDate => moment().utc().isBefore(currentDate)}
-              />
-              <h5>all times are based on UTC.</h5>
-            </div>
-          )}
+          <div>
+            {getFieldDecorator('range', {
+              rules: [{ required: true, message: 'Please input date range!' }],
+              initialValue: this.state.range
+            })(<RangePicker
+              onChange={this.handleChangeRange}
+              format={dateFormat}
+              disabledDate={currentDate => moment().utc().isBefore(currentDate)}
+            />)}
+            <h5>all times are based on UTC.</h5>
+          </div>
         </FormItem>
 
         <FormItem
@@ -111,7 +109,8 @@ class QueryForm extends Component {
 
         <FormItem>
           {getFieldDecorator('period', {
-            rules: [{ required: false }]
+            rules: [{ required: false }],
+            initialValue: ''
           })(periodOption)}
         </FormItem>
 
