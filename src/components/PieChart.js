@@ -101,7 +101,20 @@ class PieChart extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
-      this.chart.update({ series: getCategoriesSeriesData(nextProps.data) }, true);
+      	this.chart.update({ 
+      		series: [{
+				name: 'Count',
+				colorByPoint: true,
+				data: getCategoriesSeriesData(nextProps.data)
+			}],
+			drilldown: {
+				series: [{
+					name: 'Count',
+					id: 'Other',
+					data: getCategoriesDrilldownData(nextProps.data)
+				}]
+			} 
+		}, true);
     }
   }
   componentWillUnmount() {
