@@ -5,6 +5,7 @@ import { Row, Col, Alert, Spin, Card, Layout, Menu, Icon } from 'antd';
 
 import QueryForm from './components/QueryForm';
 import LineChart from './components/LineChart';
+import PieChart from './components/PieChart';
 
 const { Content } = Layout;
 
@@ -133,6 +134,18 @@ class App extends Component {
                     data={[{
                       name: 'Bounties Issued',
                       data: this.props.data.bountiesIssuedCum
+                    }]}
+                  />
+                </Col>
+                <Col md={12}>
+                  <PieChart
+                    id="categories"
+                    title="Bounty Categories"
+                    subtitle="Breakdown of categories of bounties"
+                    data={[{
+                      name: 'Count',
+                      colorByPoint: true,
+                      data: this.props.data.categories
                     }]}
                   />
                 </Col>
