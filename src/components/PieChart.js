@@ -8,17 +8,20 @@ function getCategoriesSeriesData(datas) {
 	datas.sort(function(a, b){return b[1] - a[1]});
 
 	const series = [];
+	const cutoffIndex = getCutoffIndex(datas);
 	let count = 0;
-	for (let i = 0; i < datas.length; i += 1) {
-		if (datas[i][1] < 15) {
-			count += datas[i][1];
-		} else {
-			series.push({
-			  name: datas[i][0],
-			  y: datas[i][1]
-			});
-		}
+
+	for (let i = 0; i < cutoffIndex; i += 1) {
+		series.push({
+			name: datas[i][0],
+			y: datas[i][1]
+		});
 	}
+
+	for (let i = cutoffIndex; i < datas.length; i += 1) {
+		count += datas[i][1];
+	}
+
 	series.push({
 		name: 'Other',
 		y: count,
@@ -32,17 +35,33 @@ function getCategoriesDrilldownData(datas) {
 	datas.sort(function(a, b){return b[1] - a[1]});
 
 	const series = [];
+	const cutoffIndex = getCutoffIndex(datas);
+	const cutoff = parseInt(datas[cutoffIndex][1] * 0.4, 10)
 	let count = 0;
-	for (let i = 0; i < datas.length; i += 1) {
-		if (datas[i][1] <= 3) {
+
+	for (let i = cutoffIndex; i < datas.length; i += 1) {
+		if (datas[i][1] <= cutoff) {
 			count += datas[i][1];
-		}
-		else if (datas[i][1] < 15) {
+		} else {
 			series.push([datas[i][0],datas[i][1]]);
 		}
 	}
+
 	series.push(['Other', count]);
 	return series;
+}
+
+function getCutoffIndex(datas) {
+	const total = datas.reduce((total, arr) => total + arr[1], 0);
+	const cutoff = parseInt(total * 0.75, 10);
+	let sum = 0;
+
+	for (let i = 0; i < datas.length; i += 1) {
+		if (sum > cutoff) {
+			return i;
+		}
+		sum += datas[i][1];
+	}
 }
 
 class PieChart extends React.Component {
