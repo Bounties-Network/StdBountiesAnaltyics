@@ -2,10 +2,15 @@
 import React from 'react';
 import Highcharts from 'highcharts';
 import drilldown from 'highcharts/modules/drilldown.js';
+import no_data_to_display from 'highcharts/modules/no-data-to-display.js';
 
 function getCategoriesSeriesData(datas) {
 	datas = datas[0].data;
 	datas.sort(function(a, b){return b[1] - a[1]});
+
+	if (datas.length === 0) {
+		return []
+	}
 
 	const series = [];
 	const cutoffIndex = getCutoffIndex(datas);
@@ -33,6 +38,10 @@ function getCategoriesSeriesData(datas) {
 function getCategoriesDrilldownData(datas) {
 	datas = datas[0].data;
 	datas.sort(function(a, b){return b[1] - a[1]});
+
+	if (datas.length === 0) {
+		return []
+	}
 
 	const series = [];
 	const cutoffIndex = getCutoffIndex(datas);
@@ -68,6 +77,7 @@ class PieChart extends React.Component {
 	constructor(props) {
     super(props);
     drilldown(Highcharts);
+    no_data_to_display(Highcharts);
   }
 
   // When the DOM is ready, create the chart.
@@ -119,6 +129,8 @@ class PieChart extends React.Component {
     }, 0);
   }
   componentWillReceiveProps(nextProps) {
+  	console.log(this.props.data);
+  	console.log(nextProps.data);
     if (nextProps.data !== this.props.data) {
       	this.chart.update({ 
       		series: [{

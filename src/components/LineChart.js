@@ -2,6 +2,7 @@
 import React from 'react';
 import { Select } from 'antd';
 import Highcharts from 'highcharts';
+import no_data_to_display from 'highcharts/modules/no-data-to-display.js';
 
 const { Option } = Select;
 
@@ -21,6 +22,7 @@ function getSeries(datas, period) {
 class LineChart extends React.Component {
   constructor(props) {
     super(props);
+    no_data_to_display(Highcharts);
     this.state = { period: props.period };
     this.handleSwitch = this.handleSwitch.bind(this);
   }
