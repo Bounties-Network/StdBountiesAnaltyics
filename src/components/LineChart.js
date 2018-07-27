@@ -6,13 +6,13 @@ import noDataToDisplay from 'highcharts/modules/no-data-to-display.js';
 
 const { Option } = Select;
 
-function getSeries(datas, period) {
+function getSeries(analyticsData, period) {
   const series = [];
-  for (let i = 0; i < datas.length; i += 1) {
+  for (let i = 0; i < analyticsData.length; i += 1) {
     const data = [];
-    Object.assign(data, datas[i].data[period === 'week' ? 1 : 0]);
+    Object.assign(data, analyticsData[i].data[period === 'week' ? 1 : 0]);
     series.push({
-      name: datas[i].name,
+      name: analyticsData[i].name,
       data
     });
   }

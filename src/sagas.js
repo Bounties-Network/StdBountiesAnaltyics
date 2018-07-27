@@ -13,8 +13,7 @@ function fetchData(schema, since, until) {
       is_weekly: true,
       schema
     },
-    url: 'http://localhost:8000/analytics'
-    // url: 'https://api.bounties.network/analytics/'
+    url: 'https://api.bounties.network/analytics/'
   });
 }
 

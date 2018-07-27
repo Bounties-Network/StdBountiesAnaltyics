@@ -4,72 +4,93 @@ import Highcharts from 'highcharts';
 import drilldown from 'highcharts/modules/drilldown.js';
 import noDataToDisplay from 'highcharts/modules/no-data-to-display.js';
 
-function getCategoriesSeriesData(datas) {
-	datas = datas[0].data;
-	datas.sort(function(a, b){return b[1] - a[1]});
+function getCategoriesSeriesData(analyticsData) {
+	// get categories array from raw analyticsData
+	let categoriesData = analyticsData[0].data;
 
-	if (datas.length === 0) {
+	// category = [name, count]
+	// sort array descending by count 
+	categoriesData.sort(function(a, b){return b[1] - a[1]});
+
+	// if no categories, display nothing
+	if (categoriesData.length === 0) {
 		return []
 	}
 
 	const series = [];
-	const cutoffIndex = getCutoffIndex(datas);
-	let count = 0;
+	const cutoffIndex = getCutoffIndex(categoriesData);
 
 	for (let i = 0; i < cutoffIndex; i += 1) {
+		let categoryName = categoriesData[i][0];
+		let totalCount = categoriesData[i][1];
 		series.push({
-			name: datas[i][0],
-			y: datas[i][1]
+			name: categoryName,
+			y: totalCount
 		});
 	}
 
-	for (let i = cutoffIndex; i < datas.length; i += 1) {
-		count += datas[i][1];
+	// generate Other category for less frequent bounty categories
+	let otherCount = 0;
+
+	for (let i = cutoffIndex; i < categoriesData.length; i += 1) {
+		let count = categoriesData[i][1];
+		otherCount += count;
 	}
 
 	series.push({
 		name: 'Other',
-		y: count,
+		y: otherCount ,
 		drilldown: 'Other'
 	});
 	return series;
 }
 
-function getCategoriesDrilldownData(datas) {
-	datas = datas[0].data;
-	datas.sort(function(a, b){return b[1] - a[1]});
+function getCategoriesDrilldownData(analyticsData) {
+	// get categories array from raw analyticsData
+	let categoriesData = analyticsData[0].data;
 
-	if (datas.length === 0) {
+	// category = [name, count]
+	// sort array descending by count 
+	categoriesData.sort(function(a, b){return b[1] - a[1]});
+
+	// if no categories, display nothing
+	if (categoriesData.length === 0) {
 		return []
 	}
 
 	const series = [];
-	const cutoffIndex = getCutoffIndex(datas);
-	const cutoff = parseInt(datas[cutoffIndex][1] * 0.4, 10)
-	let count = 0;
+	const cutoffIndex = getCutoffIndex(categoriesData);
+	const minCountCutoff = parseInt(categoriesData[cutoffIndex][1] * 0.4, 10)
+	let otherCount = 0;
 
-	for (let i = cutoffIndex; i < datas.length; i += 1) {
-		if (datas[i][1] <= cutoff) {
-			count += datas[i][1];
+	for (let i = cutoffIndex; i < categoriesData.length; i += 1) {
+		let totalCount = categoriesData[i][1];
+		if (totalCount <= minCountCutoff) {
+			otherCount += totalCount;
 		} else {
-			series.push([datas[i][0],datas[i][1]]);
+			let categoryName = categoriesData[i][0];
+			let totalCount = categoriesData[i][1];
+			series.push([categoryName, totalCount]);
 		}
 	}
 
-	series.push(['Other', count]);
+	series.push(['Other', otherCount]);
 	return series;
 }
 
-function getCutoffIndex(datas) {
-	const total = datas.reduce((total, arr) => total + arr[1], 0);
+function getCutoffIndex(categoriesData) {
+	// category = [name, count]
+	// calculate total sum of all category counts
+	const total = categoriesData.reduce((total, category) => total + category[1], 0);
 	const cutoff = parseInt(total * 0.75, 10);
 	let sum = 0;
 
-	for (let i = 0; i < datas.length; i += 1) {
+	for (let i = 0; i < categoriesData.length; i += 1) {
 		if (sum > cutoff) {
 			return i;
 		}
-		sum += datas[i][1];
+		let count = categoriesData[i][1]
+		sum += count;
 	}
 }
 
