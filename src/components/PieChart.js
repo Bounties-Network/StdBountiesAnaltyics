@@ -2,7 +2,7 @@
 import React from 'react';
 import Highcharts from 'highcharts';
 import drilldown from 'highcharts/modules/drilldown.js';
-import no_data_to_display from 'highcharts/modules/no-data-to-display.js';
+import noDataToDisplay from 'highcharts/modules/no-data-to-display.js';
 
 function getCategoriesSeriesData(datas) {
 	datas = datas[0].data;
@@ -77,14 +77,14 @@ class PieChart extends React.Component {
 	constructor(props) {
     super(props);
     drilldown(Highcharts);
-    no_data_to_display(Highcharts);
+    noDataToDisplay(Highcharts);
   }
 
   // When the DOM is ready, create the chart.
   componentDidMount() {
     this.chart = Highcharts.chart(this.props.id, {
 		chart: {
-			type: 'pie'
+			type: this.props.type
 		},
 		credits: {
 			enabled: false
@@ -129,8 +129,6 @@ class PieChart extends React.Component {
     }, 0);
   }
   componentWillReceiveProps(nextProps) {
-  	console.log(this.props.data);
-  	console.log(nextProps.data);
     if (nextProps.data !== this.props.data) {
       	this.chart.update({ 
       		series: [{
