@@ -20,30 +20,30 @@ class QueryForm extends Component {
         moment(config.earliestDate, dateFormat),
         moment().utc()
       ],
-      schema: config.schemaList[0].value
+      platform: config.platformList[0].value
     };
     this.handleChangeRange = this.handleChangeRange.bind(this);
-    this.handleChangeSchema = this.handleChangeSchema.bind(this);
+    this.handleChangePlatform = this.handleChangePlatform.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentDidMount() {
     this.props.form.validateFields((err) => {
       if (!err) {
-        this.props.onQuery(this.state.schema, this.state.range);
+        this.props.onQuery(this.state.platform, this.state.range);
       }
     });
   }
   handleChangeRange(value) {
     this.setState({ range: value });
   }
-  handleChangeSchema(value) {
-    this.setState({ schema: value });
+  handleChangePlatform(value) {
+    this.setState({ platform: value });
   }
   handleSubmit(e) {
     e.preventDefault();
     this.props.form.validateFields((err) => {
       if (!err) {
-        this.props.onQuery(this.state.schema, this.state.range);
+        this.props.onQuery(this.state.platform, this.state.range);
       }
     });
   }
@@ -57,14 +57,14 @@ class QueryForm extends Component {
     } = this.props.form;
 
     const rangeError = isFieldTouched('range') && getFieldError('range');
-    const schemaError = isFieldTouched('schema') && getFieldError('schema');
-    const schemaOption = (
+    const platformError = isFieldTouched('platform') && getFieldError('platform');
+    const platformOption = (
       <Select
         style={{ width: 150 }}
-        onChange={this.handleChangeSchema}
+        onChange={this.handleChangePlatform}
       >
-        {config.schemaList.map(schema => (
-          <Option key={schema.value} value={schema.value}>{schema.name}</Option>
+        {config.platformList.map(platform => (
+          <Option key={platform.value} value={platform.value}>{platform.name}</Option>
         ))}
       </Select>
     );
@@ -98,13 +98,13 @@ class QueryForm extends Component {
         </FormItem>
 
         <FormItem
-          validateStatus={schemaError ? 'error' : ''}
-          help={schemaError || ''}
+          validateStatus={platformError ? 'error' : ''}
+          help={platformError || ''}
         >
-          {getFieldDecorator('schema', {
-            rules: [{ required: true, message: 'Please select schema!' }],
-            initialValue: this.state.schema
-          })(schemaOption)}
+          {getFieldDecorator('platform', {
+            rules: [{ required: true, message: 'Please select bounty platform!' }],
+            initialValue: this.state.platform
+          })(platformOption)}
         </FormItem>
 
         <FormItem>

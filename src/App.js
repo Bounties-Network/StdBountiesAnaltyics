@@ -178,7 +178,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onQuery: (schema, range) => dispatch({ type: 'API_CALL_REQUEST', schema, range })
+  onQuery: (platform, range) => dispatch({ type: 'API_CALL_REQUEST', platform, range })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

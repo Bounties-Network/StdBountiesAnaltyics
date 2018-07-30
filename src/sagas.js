@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const dateFormat = 'YYYY-MM-DD';
 
-function fetchData(schema, since, until) {
+function fetchData(platform, since, until) {
   return axios({
     method: 'get',
     params: {
@@ -11,7 +11,7 @@ function fetchData(schema, since, until) {
       since,
       until,
       is_weekly: true,
-      schema
+      platform
     },
     url: 'https://api.bounties.network/analytics/'
   });
@@ -44,7 +44,7 @@ function parseData(raw) {
   const bountiesIssuedCum = [[], []];
 
   for (let i = 0; i < categoryData.length; i += 1) {
-    categories.push([categoryData[i].prioritized_name, categoryData[i].total_count]);
+    categories.push([categoryData[i].name, categoryData[i].total_count]);
   }
 
   for (let i = 0; i < timelineData.length; i += 1) {
@@ -100,8 +100,8 @@ function parseData(raw) {
 }
 
 // function that makes the api request and returns a Promise for response
-function getData(schema, fromDate, toDate) {
-  return fetchData(schema, fromDate, toDate)
+function getData(platform, fromDate, toDate) {
+  return fetchData(platform, fromDate, toDate)
     .then(res => parseData(res.data));
 }
 
@@ -110,7 +110,7 @@ function* workerSaga(params) {
   try {
     const data = yield call(
       getData,
-      params.schema,
+      params.platform,
       params.range[0].format(dateFormat),
       params.range[1].format(dateFormat)
     );
