@@ -1,8 +1,8 @@
 const config = {
-  schemaList: [
+  platformList: [
     { value: 'all', name: 'All' },
-    { value: 'gitcoinBounty', name: 'Gitcoin' },
-    { value: 'standardSchema', name: 'Standard Schema' }
+    { value: 'gitcoin', name: 'Gitcoin' },
+    { value: 'bounties-network', name: 'Bounties Network' }
   ],
   earliestDate: '2017-12-20'
 };

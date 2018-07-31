@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const dateFormat = 'YYYY-MM-DD';
 
-function fetchData(schema, since, until) {
+function fetchData(platform, since, until) {
   return axios({
     method: 'get',
     params: {
@@ -11,13 +11,18 @@ function fetchData(schema, since, until) {
       since,
       until,
       is_weekly: true,
-      schema
+      platform
     },
-    url: 'https://staging.api.bounties.network/analytics/'
+    url: 'https://api.bounties.network/analytics/'
   });
 }
 
 function parseData(raw) {
+  const timelineData =  raw.timeline;
+  const categoryData = raw.categories;
+
+  const categories = [];
+
   const bountyDraft = [[], []];
   const bountyActive = [[], []];
   const bountyCompleted = [[], []];
@@ -38,33 +43,39 @@ function parseData(raw) {
   const fulfillmentsAcceptedCum = [[], []];
   const bountiesIssuedCum = [[], []];
 
-  for (let i = 0; i < raw.length; i += 1) {
-    const date = Date.parse(raw[i].date);
-    const p = raw[i].is_week ? 1 : 0;
+  for (let i = 0; i < categoryData.length; i += 1) {
+    categories.push([categoryData[i].name, categoryData[i].total_count]);
+  }
 
-    bountyDraft[p].push([date, raw[i].bounty_draft]);
-    bountyActive[p].push([date, raw[i].bounty_active]);
-    bountyCompleted[p].push([date, raw[i].bounty_completed]);
-    bountyExpired[p].push([date, raw[i].bounty_expired]);
-    bountyDead[p].push([date, raw[i].bounty_dead]);
+  for (let i = 0; i < timelineData.length; i += 1) {
+    const date = Date.parse(timelineData[i].date);
+    const p = timelineData[i].is_week ? 1 : 0;
 
-    fulfillmentAcceptanceRate[p].push([date, raw[i].fulfillment_acceptance_rate]);
-    bountyFulfilledRate[p].push([date, raw[i].bounty_fulfilled_rate]);
-    avgFulfillerAcceptanceRate[p].push([date, raw[i].avg_fulfiller_acceptance_rate]);
+    bountyDraft[p].push([date, timelineData[i].bounty_draft]);
+    bountyActive[p].push([date, timelineData[i].bounty_active]);
+    bountyCompleted[p].push([date, timelineData[i].bounty_completed]);
+    bountyExpired[p].push([date, timelineData[i].bounty_expired]);
+    bountyDead[p].push([date, timelineData[i].bounty_dead]);
 
-    bountiesIssued[p].push([date, raw[i].bounties_issued]);
-    fulfillmentsSubmitted[p].push([date, raw[i].fulfillments_submitted]);
-    fulfillmentsAccepted[p].push([date, raw[i].fulfillments_accepted]);
+    fulfillmentAcceptanceRate[p].push([date, timelineData[i].fulfillment_acceptance_rate]);
+    bountyFulfilledRate[p].push([date, timelineData[i].bounty_fulfilled_rate]);
+    avgFulfillerAcceptanceRate[p].push([date, timelineData[i].avg_fulfiller_acceptance_rate]);
 
-    fulfillmentsPendingAcceptance[p].push([date, raw[i].fulfillments_pending_acceptance]);
-    avgFulfillmentAmount[p].push([date, raw[i].avg_fulfillment_amount]);
+    bountiesIssued[p].push([date, timelineData[i].bounties_issued]);
+    fulfillmentsSubmitted[p].push([date, timelineData[i].fulfillments_submitted]);
+    fulfillmentsAccepted[p].push([date, timelineData[i].fulfillments_accepted]);
 
-    fulfillmentsSubmittedCum[p].push([date, raw[i].fulfillments_submitted_cum]);
-    fulfillmentsAcceptedCum[p].push([date, raw[i].fulfillments_accepted_cum]);
-    bountiesIssuedCum[p].push([date, raw[i].bounties_issued_cum]);
+    fulfillmentsPendingAcceptance[p].push([date, timelineData[i].fulfillments_pending_acceptance]);
+    avgFulfillmentAmount[p].push([date, timelineData[i].avg_fulfillment_amount]);
+
+    fulfillmentsSubmittedCum[p].push([date, timelineData[i].fulfillments_submitted_cum]);
+    fulfillmentsAcceptedCum[p].push([date, timelineData[i].fulfillments_accepted_cum]);
+    bountiesIssuedCum[p].push([date, timelineData[i].bounties_issued_cum]);
   }
 
   return {
+    categories,
+
     bountyDraft,
     bountyActive,
     bountyCompleted,
@@ -89,8 +100,8 @@ function parseData(raw) {
 }
 
 // function that makes the api request and returns a Promise for response
-function getData(schema, fromDate, toDate) {
-  return fetchData(schema, fromDate, toDate)
+function getData(platform, fromDate, toDate) {
+  return fetchData(platform, fromDate, toDate)
     .then(res => parseData(res.data));
 }
 
@@ -99,7 +110,7 @@ function* workerSaga(params) {
   try {
     const data = yield call(
       getData,
-      params.schema,
+      params.platform,
       params.range[0].format(dateFormat),
       params.range[1].format(dateFormat)
     );

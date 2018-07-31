@@ -5,6 +5,7 @@ import { Row, Col, Alert, Spin, Card, Layout, Menu, Icon } from 'antd';
 
 import QueryForm from './components/QueryForm';
 import LineChart from './components/LineChart';
+import PieChart from './components/PieChart';
 
 const { Content } = Layout;
 
@@ -44,6 +45,7 @@ class App extends Component {
               <Row>
                 <Col md={12}>
                   <LineChart
+                    type="line"
                     id="bountyStatesChart"
                     title="Bounty States"
                     period={this.state.period || 'day'}
@@ -67,6 +69,7 @@ class App extends Component {
                 </Col>
                 <Col md={12}>
                   <LineChart
+                    type="line"
                     id="rateChart"
                     title="Fulfill Rate"
                     period={this.state.period || 'week'}
@@ -84,6 +87,7 @@ class App extends Component {
                 </Col>
                 <Col md={12}>
                   <LineChart
+                    type="line"
                     id="fulfillments"
                     title="Fulfillments"
                     period={this.state.period || 'day'}
@@ -99,6 +103,7 @@ class App extends Component {
                 </Col>
                 <Col md={12}>
                   <LineChart
+                    type="line"
                     id="fulfillmentsCum"
                     title="Fulfillments Cumulative"
                     period={this.state.period || 'day'}
@@ -114,6 +119,7 @@ class App extends Component {
                 </Col>
                 <Col md={12}>
                   <LineChart
+                    type="line"
                     id="bountiesIssued"
                     title="Bounties Issued"
                     period={this.state.period || 'day'}
@@ -126,6 +132,7 @@ class App extends Component {
                 </Col>
                 <Col md={12}>
                   <LineChart
+                    type="line"
                     id="bountiesIssuedCum"
                     title="Bounties Issued Cumulative"
                     period={this.state.period || 'day'}
@@ -133,6 +140,19 @@ class App extends Component {
                     data={[{
                       name: 'Bounties Issued',
                       data: this.props.data.bountiesIssuedCum
+                    }]}
+                  />
+                </Col>
+                <Col md={12}>
+                  <PieChart
+                    type="pie"
+                    id="categories"
+                    title="Bounty Categories"
+                    subtitle="Breakdown of categories of bounties"
+                    data={[{
+                      name: 'Count',
+                      colorByPoint: true,
+                      data: this.props.data.categories
                     }]}
                   />
                 </Col>
@@ -158,7 +178,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onQuery: (schema, range) => dispatch({ type: 'API_CALL_REQUEST', schema, range })
+  onQuery: (platform, range) => dispatch({ type: 'API_CALL_REQUEST', platform, range })
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
