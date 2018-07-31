@@ -55,11 +55,14 @@ function getCategoriesSeriesData(categoriesData) {
 		otherCount += count;
 	}
 
-	series.push({
-		name: 'Other',
-		y: otherCount ,
-		drilldown: 'Other'
-	});
+	if (otherCount > 0) {
+		series.push({
+			name: 'Other',
+			y: otherCount ,
+			drilldown: 'Other'
+		});
+	}
+
 	return series;
 }
 
@@ -85,7 +88,10 @@ function getCategoriesDrilldownData(categoriesData) {
 		}
 	}
 
-	series.push(['Other', otherCount]);
+	if (otherCount > 0) {
+		series.push(['Other', otherCount]);
+	}
+
 	return series;
 }
 
@@ -107,11 +113,13 @@ function getTokenSeriesData(tokenData) {
 		
 	}
 
-	series.push({
-		name: 'Other',
-		y: otherCount ,
-		drilldown: 'Other'
-	});
+	if (otherCount > 0) {
+		series.push({
+			name: 'Other',
+			y: otherCount ,
+			drilldown: 'Other'
+		});
+	}
 
 	return series;
 }
