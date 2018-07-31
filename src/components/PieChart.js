@@ -4,6 +4,24 @@ import Highcharts from 'highcharts';
 import drilldown from 'highcharts/modules/drilldown.js';
 import noDataToDisplay from 'highcharts/modules/no-data-to-display.js';
 
+function getSeriesData(analyticsData) {
+	let rawData = analyticsData[0];
+	if (rawData.id === 'categories') {
+		return getCategoriesSeriesData(analyticsData);
+	} else if (rawData.id === 'tokens') {
+		return getTokensSeriesData(analyticsData);
+	}
+}
+
+function getDrilldownData(analyticsData) {
+	let rawData = analyticsData[0];
+	if (rawData.id === 'categories') {
+		return getCategoriesDrilldownData(analyticsData);
+	} else if (rawData.id === 'tokens') {
+		return getTokensDrilldownData(analyticsData);
+	}
+}
+
 function getCategoriesSeriesData(analyticsData) {
 	// get categories array from raw analyticsData
 	let categoriesData = analyticsData[0].data;
@@ -78,6 +96,55 @@ function getCategoriesDrilldownData(analyticsData) {
 	return series;
 }
 
+function getTokensSeriesData(analyticsData) {
+	let tokenData = analyticsData[0].data;
+
+	tokenData.sort(function(a, b){return b[1] - a[1]});
+
+	const series = [];
+	let otherCount = 0;
+
+	for (let i = 0; i < tokenData.length; i += 1) {
+		let tokenSymbol = tokenData[i][0];
+		let count = tokenData[i][1];
+		if (count > 5) {
+			series.push({
+				name: tokenSymbol,
+				y: count
+			});
+		} else {
+			otherCount += count;
+		}
+		
+	}
+
+	series.push({
+		name: 'Other',
+		y: otherCount ,
+		drilldown: 'Other'
+	});
+
+	return series;
+}
+
+function getTokensDrilldownData(analyticsData) {
+	let tokenData = analyticsData[0].data;
+
+	tokenData.sort(function(a, b){return b[1] - a[1]});
+
+	const series = [];
+
+	for (let i = 0; i < tokenData.length; i += 1) {
+		let tokenSymbol = tokenData[i][0];
+		let count = tokenData[i][1];
+		if (count <= 5) {
+			series.push([tokenSymbol, count]);
+		}
+	}
+
+	return series
+}
+
 function getCutoffIndex(categoriesData) {
 	// category = [name, count]
 	// calculate total sum of all category counts
@@ -97,8 +164,10 @@ function getCutoffIndex(categoriesData) {
 class PieChart extends React.Component {
 	constructor(props) {
     super(props);
-    drilldown(Highcharts);
     noDataToDisplay(Highcharts);
+    if (!Highcharts.Chart.prototype.addSeriesAsDrilldown) {
+	    drilldown(Highcharts);
+	}
   }
 
   // When the DOM is ready, create the chart.
@@ -135,13 +204,13 @@ class PieChart extends React.Component {
 		series: [{
 			name: 'Count',
 			colorByPoint: true,
-			data: getCategoriesSeriesData(this.props.data)
+			data: getSeriesData(this.props.data)
 		}],
 		drilldown: {
 			series: [{
 				name: 'Count',
 				id: 'Other',
-				data: getCategoriesDrilldownData(this.props.data)
+				data: getDrilldownData(this.props.data)
 			}]
 		}
     });
@@ -155,13 +224,13 @@ class PieChart extends React.Component {
       		series: [{
 				name: 'Count',
 				colorByPoint: true,
-				data: getCategoriesSeriesData(nextProps.data)
+				data: getSeriesData(nextProps.data)
 			}],
 			drilldown: {
 				series: [{
 					name: 'Count',
 					id: 'Other',
-					data: getCategoriesDrilldownData(nextProps.data)
+					data: getDrilldownData(nextProps.data)
 				}]
 			} 
 		}, true);

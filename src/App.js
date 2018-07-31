@@ -21,6 +21,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Menu defaultSelectedKeys={['1']} mode="horizontal">
@@ -150,9 +151,24 @@ class App extends Component {
                     title="Bounty Categories"
                     subtitle="Breakdown of categories of bounties"
                     data={[{
+                      id: 'categories',
                       name: 'Count',
                       colorByPoint: true,
                       data: this.props.data.categories
+                    }]}
+                  />
+                </Col>
+                <Col md={12}>
+                  <PieChart
+                    type="pie"
+                    id="tokens"
+                    title="Token Chart"
+                    subtitle="Breakdown of tokens accepted on our platform"
+                    data={[{
+                      id: 'tokens',
+                      name: 'Count',
+                      colorByPoint: true,
+                      data: this.props.data.tokens
                     }]}
                   />
                 </Col>
