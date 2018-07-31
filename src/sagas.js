@@ -13,8 +13,7 @@ function fetchData(platform, since, until) {
       is_weekly: true,
       platform
     },
-    url: 'http://localhost:8000/analytics'
-    // url: 'https://api.bounties.network/analytics/'
+    url: 'https://api.bounties.network/analytics/'
   });
 }
 

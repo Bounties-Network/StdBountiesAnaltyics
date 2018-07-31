@@ -6,30 +6,30 @@ import noDataToDisplay from 'highcharts/modules/no-data-to-display.js';
 
 function getSeriesData(analyticsData) {
 	let rawData = analyticsData[0];
+
 	if (rawData.id === 'categories') {
-		return getCategoriesSeriesData(analyticsData);
+		// get categories array from raw analyticsData
+		let categoriesData = analyticsData[0].data;
+
+		// category = [name, count]
+		// sort array descending by count 
+		categoriesData.sort(function(a, b){return b[1] - a[1]});
+
+		return {series: getCategoriesSeriesData(categoriesData), drilldown: getCategoriesDrilldownData(categoriesData)};
+
 	} else if (rawData.id === 'tokens') {
-		return getTokensSeriesData(analyticsData);
+		// get tokenData array from raw analyticsData
+		let tokenData = analyticsData[0].data;
+
+		// token = [token_symbol, count]
+		// sort array descending by count 
+		tokenData.sort(function(a, b){return b[1] - a[1]});
+
+		return {series: getTokenSeriesData(tokenData), drilldown: getTokenDrilldownData(tokenData)};
 	}
 }
 
-function getDrilldownData(analyticsData) {
-	let rawData = analyticsData[0];
-	if (rawData.id === 'categories') {
-		return getCategoriesDrilldownData(analyticsData);
-	} else if (rawData.id === 'tokens') {
-		return getTokensDrilldownData(analyticsData);
-	}
-}
-
-function getCategoriesSeriesData(analyticsData) {
-	// get categories array from raw analyticsData
-	let categoriesData = analyticsData[0].data;
-
-	// category = [name, count]
-	// sort array descending by count 
-	categoriesData.sort(function(a, b){return b[1] - a[1]});
-
+function getCategoriesSeriesData(categoriesData) {
 	// if no categories, display nothing
 	if (categoriesData.length === 0) {
 		return []
@@ -63,14 +63,7 @@ function getCategoriesSeriesData(analyticsData) {
 	return series;
 }
 
-function getCategoriesDrilldownData(analyticsData) {
-	// get categories array from raw analyticsData
-	let categoriesData = analyticsData[0].data;
-
-	// category = [name, count]
-	// sort array descending by count 
-	categoriesData.sort(function(a, b){return b[1] - a[1]});
-
+function getCategoriesDrilldownData(categoriesData) {
 	// if no categories, display nothing
 	if (categoriesData.length === 0) {
 		return []
@@ -96,11 +89,7 @@ function getCategoriesDrilldownData(analyticsData) {
 	return series;
 }
 
-function getTokensSeriesData(analyticsData) {
-	let tokenData = analyticsData[0].data;
-
-	tokenData.sort(function(a, b){return b[1] - a[1]});
-
+function getTokenSeriesData(tokenData) {
 	const series = [];
 	let otherCount = 0;
 
@@ -127,11 +116,7 @@ function getTokensSeriesData(analyticsData) {
 	return series;
 }
 
-function getTokensDrilldownData(analyticsData) {
-	let tokenData = analyticsData[0].data;
-
-	tokenData.sort(function(a, b){return b[1] - a[1]});
-
+function getTokenDrilldownData(tokenData) {
 	const series = [];
 
 	for (let i = 0; i < tokenData.length; i += 1) {
@@ -204,13 +189,13 @@ class PieChart extends React.Component {
 		series: [{
 			name: 'Count',
 			colorByPoint: true,
-			data: getSeriesData(this.props.data)
+			data: getSeriesData(this.props.data).series
 		}],
 		drilldown: {
 			series: [{
 				name: 'Count',
 				id: 'Other',
-				data: getDrilldownData(this.props.data)
+				data: getSeriesData(this.props.data).drilldown
 			}]
 		}
     });
@@ -224,13 +209,13 @@ class PieChart extends React.Component {
       		series: [{
 				name: 'Count',
 				colorByPoint: true,
-				data: getSeriesData(nextProps.data)
+				data: getSeriesData(nextProps.data).series
 			}],
 			drilldown: {
 				series: [{
 					name: 'Count',
 					id: 'Other',
-					data: getDrilldownData(nextProps.data)
+					data: getSeriesData(nextProps.data).drilldown
 				}]
 			} 
 		}, true);

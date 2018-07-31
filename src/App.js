@@ -21,7 +21,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Menu defaultSelectedKeys={['1']} mode="horizontal">
