@@ -47,6 +47,12 @@ function parseData(raw) {
   const fulfillmentsAcceptedCum = [[], []];
   const bountiesIssuedCum = [[], []];
 
+  const uniqueIssuers = [[], []];
+  const uniqueIssuersCum = [[], []];
+  const uniqueFulfillers = [[], []];
+  const uniqueFulfillersCum = [[], []];
+
+
   for (let i = 0; i < categoryData.length; i += 1) {
     categories.push([categoryData[i].name, categoryData[i].total_count]);
   }
@@ -80,6 +86,11 @@ function parseData(raw) {
     fulfillmentsSubmittedCum[p].push([date, timelineData[i].fulfillments_submitted_cum]);
     fulfillmentsAcceptedCum[p].push([date, timelineData[i].fulfillments_accepted_cum]);
     bountiesIssuedCum[p].push([date, timelineData[i].bounties_issued_cum]);
+
+    uniqueIssuers[p].push([date, timelineData[i].total_unique_issuers]);
+    uniqueIssuersCum[p].push([date, timelineData[i].total_unique_issuers_cum]);
+    uniqueFulfillers[p].push([date, timelineData[i].total_unique_fulfillers]);
+    uniqueFulfillersCum[p].push([date, timelineData[i].total_unique_fulfillers_cum]);
   }
 
   return {
@@ -106,7 +117,12 @@ function parseData(raw) {
 
     bountiesIssuedCum,
     fulfillmentsSubmittedCum,
-    fulfillmentsAcceptedCum
+    fulfillmentsAcceptedCum,
+
+    uniqueIssuers,
+    uniqueIssuersCum,
+    uniqueFulfillers,
+    uniqueFulfillersCum
   };
 }
 

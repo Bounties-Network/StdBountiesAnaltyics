@@ -147,6 +147,38 @@ class App extends Component {
                 <Col md={12}>
                   <LineChart
                     type="line"
+                    id="uniqueUsers"
+                    title="Unique Issuers/Fulfillers"
+                    period={this.state.period || 'day'}
+                    subtitle="These values are not cumulative (independent day to day)"
+                    data={[{
+                      name: 'Fulfillers',
+                      data: this.props.data.uniqueFulfillers
+                    }, {
+                      name: 'Issuers',
+                      data: this.props.data.uniqueIssuers
+                    }]}
+                  />
+                </Col>
+                <Col md={12}>
+                  <LineChart
+                    type="line"
+                    id="uniqueUsersCum"
+                    title="Unique Issuers/Fulfillers Cumulative"
+                    period={this.state.period || 'day'}
+                    subtitle="These values are cumulative over time"
+                    data={[{
+                      name: 'Fulfillers',
+                      data: this.props.data.uniqueFulfillersCum
+                    }, {
+                      name: 'Issuers',
+                      data: this.props.data.uniqueIssuersCum
+                    }]}
+                  />
+                </Col>
+                <Col md={12}>
+                  <LineChart
+                    type="line"
                     id="totalFulfillmentAmount"
                     title="Bounty Values"
                     period={this.state.period || 'day'}
