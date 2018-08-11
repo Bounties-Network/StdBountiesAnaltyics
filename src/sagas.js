@@ -13,7 +13,8 @@ function fetchData(platform, since, until) {
       is_weekly: true,
       platform
     },
-    url: 'https://api.bounties.network/analytics/'
+    url: 'http://localhost:8000/analytics'
+    // url: 'https://api.bounties.network/analytics/'
   });
 }
 
@@ -40,6 +41,7 @@ function parseData(raw) {
   const fulfillmentsAccepted = [[], []];
   const fulfillmentsPendingAcceptance = [[], []];
   const avgFulfillmentAmount = [[], []];
+  const totalFulfillmentAmount = [[], []];
 
   const fulfillmentsSubmittedCum = [[], []];
   const fulfillmentsAcceptedCum = [[], []];
@@ -73,6 +75,7 @@ function parseData(raw) {
 
     fulfillmentsPendingAcceptance[p].push([date, timelineData[i].fulfillments_pending_acceptance]);
     avgFulfillmentAmount[p].push([date, timelineData[i].avg_fulfillment_amount]);
+    totalFulfillmentAmount[p].push([date, timelineData[i].total_fulfillment_amount]);
 
     fulfillmentsSubmittedCum[p].push([date, timelineData[i].fulfillments_submitted_cum]);
     fulfillmentsAcceptedCum[p].push([date, timelineData[i].fulfillments_accepted_cum]);
@@ -99,6 +102,7 @@ function parseData(raw) {
 
     fulfillmentsPendingAcceptance,
     avgFulfillmentAmount,
+    totalFulfillmentAmount,
 
     bountiesIssuedCum,
     fulfillmentsSubmittedCum,

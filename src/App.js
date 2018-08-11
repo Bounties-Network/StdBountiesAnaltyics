@@ -21,6 +21,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Menu defaultSelectedKeys={['1']} mode="horizontal">
@@ -140,6 +141,19 @@ class App extends Component {
                     data={[{
                       name: 'Bounties Issued',
                       data: this.props.data.bountiesIssuedCum
+                    }]}
+                  />
+                </Col>
+                <Col md={12}>
+                  <LineChart
+                    type="line"
+                    id="totalFulfillmentAmount"
+                    title="Bounty Values"
+                    period={this.state.period || 'day'}
+                    subtitle="These values are cumulative over time"
+                    data={[{
+                      name: 'Bounty Value in USD',
+                      data: this.props.data.totalFulfillmentAmount
                     }]}
                   />
                 </Col>
