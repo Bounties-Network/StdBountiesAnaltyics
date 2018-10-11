@@ -21,6 +21,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <Layout style={{ minHeight: '100vh' }}>
         <Menu defaultSelectedKeys={['1']} mode="horizontal">
@@ -144,15 +145,75 @@ class App extends Component {
                   />
                 </Col>
                 <Col md={12}>
+                  <LineChart
+                    type="line"
+                    id="uniqueUsers"
+                    title="Unique Issuers/Fulfillers"
+                    period={this.state.period || 'day'}
+                    subtitle="These values are not cumulative (independent day to day)"
+                    data={[{
+                      name: 'Fulfillers',
+                      data: this.props.data.uniqueFulfillers
+                    }, {
+                      name: 'Issuers',
+                      data: this.props.data.uniqueIssuers
+                    }]}
+                  />
+                </Col>
+                <Col md={12}>
+                  <LineChart
+                    type="line"
+                    id="uniqueUsersCum"
+                    title="Unique Issuers/Fulfillers Cumulative"
+                    period={this.state.period || 'day'}
+                    subtitle="These values are cumulative over time"
+                    data={[{
+                      name: 'Fulfillers',
+                      data: this.props.data.uniqueFulfillersCum
+                    }, {
+                      name: 'Issuers',
+                      data: this.props.data.uniqueIssuersCum
+                    }]}
+                  />
+                </Col>
+                <Col md={12}>
+                  <LineChart
+                    type="line"
+                    id="totalFulfillmentAmount"
+                    title="Bounty Values"
+                    period={this.state.period || 'day'}
+                    subtitle="These values are cumulative over time"
+                    data={[{
+                      name: 'Bounty Value in USD',
+                      data: this.props.data.totalFulfillmentAmount
+                    }]}
+                  />
+                </Col>
+                <Col md={12}>
                   <PieChart
                     type="pie"
                     id="categories"
                     title="Bounty Categories"
                     subtitle="Breakdown of categories of bounties"
                     data={[{
+                      id: 'categories',
                       name: 'Count',
                       colorByPoint: true,
                       data: this.props.data.categories
+                    }]}
+                  />
+                </Col>
+                <Col md={12}>
+                  <PieChart
+                    type="pie"
+                    id="tokens"
+                    title="Token Chart"
+                    subtitle="Breakdown of tokens accepted on our platform"
+                    data={[{
+                      id: 'tokens',
+                      name: 'Count',
+                      colorByPoint: true,
+                      data: this.props.data.tokens
                     }]}
                   />
                 </Col>

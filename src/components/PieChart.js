@@ -4,14 +4,32 @@ import Highcharts from 'highcharts';
 import drilldown from 'highcharts/modules/drilldown.js';
 import noDataToDisplay from 'highcharts/modules/no-data-to-display.js';
 
-function getCategoriesSeriesData(analyticsData) {
-	// get categories array from raw analyticsData
-	let categoriesData = analyticsData[0].data;
+function getSeriesData(analyticsData) {
+	let rawData = analyticsData[0];
 
-	// category = [name, count]
-	// sort array descending by count 
-	categoriesData.sort(function(a, b){return b[1] - a[1]});
+	if (rawData.id === 'categories') {
+		// get categories array from raw analyticsData
+		let categoriesData = analyticsData[0].data;
 
+		// category = [name, count]
+		// sort array descending by count 
+		categoriesData.sort(function(a, b){return b[1] - a[1]});
+
+		return {series: getCategoriesSeriesData(categoriesData), drilldown: getCategoriesDrilldownData(categoriesData)};
+
+	} else if (rawData.id === 'tokens') {
+		// get tokenData array from raw analyticsData
+		let tokenData = analyticsData[0].data;
+
+		// token = [token_symbol, count]
+		// sort array descending by count 
+		tokenData.sort(function(a, b){return b[1] - a[1]});
+
+		return {series: getTokenSeriesData(tokenData), drilldown: getTokenDrilldownData(tokenData)};
+	}
+}
+
+function getCategoriesSeriesData(categoriesData) {
 	// if no categories, display nothing
 	if (categoriesData.length === 0) {
 		return []
@@ -37,22 +55,18 @@ function getCategoriesSeriesData(analyticsData) {
 		otherCount += count;
 	}
 
-	series.push({
-		name: 'Other',
-		y: otherCount ,
-		drilldown: 'Other'
-	});
+	if (otherCount > 0) {
+		series.push({
+			name: 'Other',
+			y: otherCount ,
+			drilldown: 'Other'
+		});
+	}
+
 	return series;
 }
 
-function getCategoriesDrilldownData(analyticsData) {
-	// get categories array from raw analyticsData
-	let categoriesData = analyticsData[0].data;
-
-	// category = [name, count]
-	// sort array descending by count 
-	categoriesData.sort(function(a, b){return b[1] - a[1]});
-
+function getCategoriesDrilldownData(categoriesData) {
 	// if no categories, display nothing
 	if (categoriesData.length === 0) {
 		return []
@@ -74,8 +88,54 @@ function getCategoriesDrilldownData(analyticsData) {
 		}
 	}
 
-	series.push(['Other', otherCount]);
+	if (otherCount > 0) {
+		series.push(['Other', otherCount]);
+	}
+
 	return series;
+}
+
+function getTokenSeriesData(tokenData) {
+	const series = [];
+	let otherCount = 0;
+
+	for (let i = 0; i < tokenData.length; i += 1) {
+		let tokenSymbol = tokenData[i][0];
+		let count = tokenData[i][1];
+		if (count > 5) {
+			series.push({
+				name: tokenSymbol,
+				y: count
+			});
+		} else {
+			otherCount += count;
+		}
+		
+	}
+
+	if (otherCount > 0) {
+		series.push({
+			name: 'Other',
+			y: otherCount ,
+			drilldown: 'Other'
+		});
+	}
+
+	return series;
+}
+
+function getTokenDrilldownData(tokenData) {
+	const series = [];
+
+	for (let i = 0; i < tokenData.length; i += 1) {
+		let tokenSymbol = tokenData[i][0];
+		let count = tokenData[i][1];
+		if (count <= 5) {
+			series.push([tokenSymbol, count]);
+		}
+	}
+
+	return series
 }
 
 function getCutoffIndex(categoriesData) {
@@ -97,8 +157,10 @@ function getCutoffIndex(categoriesData) {
 class PieChart extends React.Component {
 	constructor(props) {
     super(props);
-    drilldown(Highcharts);
     noDataToDisplay(Highcharts);
+    if (!Highcharts.Chart.prototype.addSeriesAsDrilldown) {
+	    drilldown(Highcharts);
+	}
   }
 
   // When the DOM is ready, create the chart.
@@ -135,13 +197,13 @@ class PieChart extends React.Component {
 		series: [{
 			name: 'Count',
 			colorByPoint: true,
-			data: getCategoriesSeriesData(this.props.data)
+			data: getSeriesData(this.props.data).series
 		}],
 		drilldown: {
 			series: [{
 				name: 'Count',
 				id: 'Other',
-				data: getCategoriesDrilldownData(this.props.data)
+				data: getSeriesData(this.props.data).drilldown
 			}]
 		}
     });
@@ -155,13 +217,13 @@ class PieChart extends React.Component {
       		series: [{
 				name: 'Count',
 				colorByPoint: true,
-				data: getCategoriesSeriesData(nextProps.data)
+				data: getSeriesData(nextProps.data).series
 			}],
 			drilldown: {
 				series: [{
 					name: 'Count',
 					id: 'Other',
-					data: getCategoriesDrilldownData(nextProps.data)
+					data: getSeriesData(nextProps.data).drilldown
 				}]
 			} 
 		}, true);

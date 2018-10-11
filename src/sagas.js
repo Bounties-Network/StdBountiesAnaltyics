@@ -13,15 +13,18 @@ function fetchData(platform, since, until) {
       is_weekly: true,
       platform
     },
-    url: 'https://api.bounties.network/analytics/'
+    url: 'http://localhost:8000/analytics'
+    // url: 'https://api.bounties.network/analytics/'
   });
 }
 
 function parseData(raw) {
   const timelineData =  raw.timeline;
   const categoryData = raw.categories;
+  const tokenData = raw.tokens;
 
   const categories = [];
+  const tokens = []
 
   const bountyDraft = [[], []];
   const bountyActive = [[], []];
@@ -38,14 +41,25 @@ function parseData(raw) {
   const fulfillmentsAccepted = [[], []];
   const fulfillmentsPendingAcceptance = [[], []];
   const avgFulfillmentAmount = [[], []];
+  const totalFulfillmentAmount = [[], []];
 
   const fulfillmentsSubmittedCum = [[], []];
   const fulfillmentsAcceptedCum = [[], []];
   const bountiesIssuedCum = [[], []];
 
+  const uniqueIssuers = [[], []];
+  const uniqueIssuersCum = [[], []];
+  const uniqueFulfillers = [[], []];
+  const uniqueFulfillersCum = [[], []];
+
+
   for (let i = 0; i < categoryData.length; i += 1) {
     categories.push([categoryData[i].name, categoryData[i].total_count]);
   }
+
+  for (let i = 0; i < tokenData.length; i += 1) {
+    tokens.push([tokenData[i].token_symbol, tokenData[i].total_count]);
+  } 
 
   for (let i = 0; i < timelineData.length; i += 1) {
     const date = Date.parse(timelineData[i].date);
@@ -67,14 +81,21 @@ function parseData(raw) {
 
     fulfillmentsPendingAcceptance[p].push([date, timelineData[i].fulfillments_pending_acceptance]);
     avgFulfillmentAmount[p].push([date, timelineData[i].avg_fulfillment_amount]);
+    totalFulfillmentAmount[p].push([date, timelineData[i].total_fulfillment_amount]);
 
     fulfillmentsSubmittedCum[p].push([date, timelineData[i].fulfillments_submitted_cum]);
     fulfillmentsAcceptedCum[p].push([date, timelineData[i].fulfillments_accepted_cum]);
     bountiesIssuedCum[p].push([date, timelineData[i].bounties_issued_cum]);
+
+    uniqueIssuers[p].push([date, timelineData[i].total_unique_issuers]);
+    uniqueIssuersCum[p].push([date, timelineData[i].total_unique_issuers_cum]);
+    uniqueFulfillers[p].push([date, timelineData[i].total_unique_fulfillers]);
+    uniqueFulfillersCum[p].push([date, timelineData[i].total_unique_fulfillers_cum]);
   }
 
   return {
     categories,
+    tokens,
 
     bountyDraft,
     bountyActive,
@@ -92,10 +113,16 @@ function parseData(raw) {
 
     fulfillmentsPendingAcceptance,
     avgFulfillmentAmount,
+    totalFulfillmentAmount,
 
     bountiesIssuedCum,
     fulfillmentsSubmittedCum,
-    fulfillmentsAcceptedCum
+    fulfillmentsAcceptedCum,
+
+    uniqueIssuers,
+    uniqueIssuersCum,
+    uniqueFulfillers,
+    uniqueFulfillersCum
   };
 }
 
