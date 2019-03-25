@@ -31,22 +31,34 @@ class LineChart extends React.Component {
   componentDidMount() {
     this.chart = Highcharts.chart(this.props.id, {
       chart: {
-        type: this.props.type
+        type: 'spline',
+        backgroundColor: "#37474f"
       },
       credits: {
         enabled: false
       },
       title: {
-        text: this.props.title
+        text: this.props.title,
+        style: {
+  				color: "white"
+  			}
       },
       subtitle: {
-        text: this.props.subtitle
+        text: this.props.subtitle,
+        style: {
+  				color: "white"
+  			}
       },
       legend: {
         layout: 'horizontal',
         align: 'center',
-        verticalAlign: 'bottom'
+        verticalAlign: 'bottom',
+        color: 'white',
+        itemStyle: {
+          color: "white"
+        }
       },
+      colors: ['#2f7ed8', '#8bbc21', '#1aadce', '#492970', '#f28f43', '#77a1e5', '#c42525', '#a6c96a'],
       plotOptions: {
         series: {
           label: {
@@ -68,6 +80,34 @@ class LineChart extends React.Component {
         type: 'datetime',
         dateTimeLabelFormats: {
           day: '%d %b'
+        },
+        style: {
+          color: "white"
+        },
+        labels: {
+          style: {
+            color: "white"
+          }
+        },
+        title: {
+          style: {
+            color: "white"
+          }
+        }
+      },
+      yAxis: {
+        style: {
+          color: "white"
+        },
+        labels: {
+          style: {
+            color: "white"
+          }
+        },
+        title: {
+          style: {
+            color: "white"
+          }
         }
       },
       series: getSeries(this.props.data, this.props.period),
@@ -117,6 +157,7 @@ class LineChart extends React.Component {
         >
           <Option key="day" value="day">Daily</Option>
           <Option key="week" value="week">Weekly</Option>
+          <Option key="month" value="month">Monthly</Option>
         </Select>
       </div>);
   }

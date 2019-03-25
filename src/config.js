@@ -6,6 +6,8 @@ const config = {
     { value: 'berlin', name: 'Berlin' },
     { value: 'sf', name: 'San Francisco' },
     { value: 'prague', name: 'Prague' },
+    { value: '!gitcoin', name: 'All Bounties Network' },
+
   ],
   earliestDate: '2017-12-20'
 };

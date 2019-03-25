@@ -12,7 +12,7 @@ function getSeriesData(analyticsData) {
 		let categoriesData = analyticsData[0].data;
 
 		// category = [name, count]
-		// sort array descending by count 
+		// sort array descending by count
 		categoriesData.sort(function(a, b){return b[1] - a[1]});
 
 		return {series: getCategoriesSeriesData(categoriesData), drilldown: getCategoriesDrilldownData(categoriesData)};
@@ -22,7 +22,7 @@ function getSeriesData(analyticsData) {
 		let tokenData = analyticsData[0].data;
 
 		// token = [token_symbol, count]
-		// sort array descending by count 
+		// sort array descending by count
 		tokenData.sort(function(a, b){return b[1] - a[1]});
 
 		return {series: getTokenSeriesData(tokenData), drilldown: getTokenDrilldownData(tokenData)};
@@ -110,7 +110,7 @@ function getTokenSeriesData(tokenData) {
 		} else {
 			otherCount += count;
 		}
-		
+
 	}
 
 	if (otherCount > 0) {
@@ -167,29 +167,57 @@ class PieChart extends React.Component {
   componentDidMount() {
     this.chart = Highcharts.chart(this.props.id, {
 		chart: {
-			type: this.props.type
+			style: {
+				color: "white !important"
+			},
+			type: this.props.type,
+			backgroundColor: "#37474f",
+			drilldown: {
+				activeAxisLabelStyle: {
+					color: "white !important"
+				},
+				activeDataLabelStyle: {
+					color: "white !important"
+				}
+			},
+			labels:{
+				style: {
+					color: "white"
+				}
+			}
 		},
 		credits: {
 			enabled: false
 		},
 		title: {
-			text: this.props.title
+			text: this.props.title,
+			style: {
+				color: "white"
+			}
 		},
 		subtitle: {
-			text: this.props.subtitle
+			text: this.props.subtitle,
+			style: {
+				color: "white"
+			}
 		},
 		tooltip: {
 			pointFormat: '{series.name}: <b>{point.y}</b>'
 		},
+		dataLabelsColor: 'white',
 		plotOptions: {
 			pie: {
 			    allowPointSelect: true,
 			    cursor: 'pointer',
+					borderWidth: 0,
 			    dataLabels: {
 			        enabled: true,
+							borderWidth: 0,
+							color: "white",
 			        format: '<b>{point.name}</b>: {point.percentage:.1f}%',
 			        style: {
-			            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+			            color: 'white',
+									textOutline: "0px contrast"
 			        }
 			    }
 			}
@@ -197,8 +225,12 @@ class PieChart extends React.Component {
 		series: [{
 			name: 'Count',
 			colorByPoint: true,
-			data: getSeriesData(this.props.data).series
+			data: getSeriesData(this.props.data).series,
+			dataLabels: {
+					color: 'white'
+			},
 		}],
+
 		drilldown: {
 			series: [{
 				name: 'Count',
@@ -213,7 +245,7 @@ class PieChart extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
-      	this.chart.update({ 
+      	this.chart.update({
       		series: [{
 				name: 'Count',
 				colorByPoint: true,
@@ -225,7 +257,7 @@ class PieChart extends React.Component {
 					id: 'Other',
 					data: getSeriesData(nextProps.data).drilldown
 				}]
-			} 
+			}
 		}, true);
     }
   }

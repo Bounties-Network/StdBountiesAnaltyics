@@ -44,7 +44,7 @@ class App extends Component {
           <Spin spinning={this.props.fetching}>
             {this.props.data &&
               <Row>
-                <Col md={12}>
+                <Col md={24}>
                   <LineChart
                     type="line"
                     id="bountyStatesChart"
@@ -68,7 +68,7 @@ class App extends Component {
                     }]}
                   />
                 </Col>
-                <Col md={12}>
+                <Col md={24}>
                   <LineChart
                     type="line"
                     id="rateChart"
@@ -86,7 +86,7 @@ class App extends Component {
                     }]}
                   />
                 </Col>
-                <Col md={12}>
+                <Col md={24}>
                   <LineChart
                     type="line"
                     id="fulfillments"
@@ -102,7 +102,7 @@ class App extends Component {
                     }]}
                   />
                 </Col>
-                <Col md={12}>
+                <Col md={24}>
                   <LineChart
                     type="line"
                     id="fulfillmentsCum"
@@ -118,7 +118,7 @@ class App extends Component {
                     }]}
                   />
                 </Col>
-                <Col md={12}>
+                <Col md={24}>
                   <LineChart
                     type="line"
                     id="bountiesIssued"
@@ -131,7 +131,7 @@ class App extends Component {
                     }]}
                   />
                 </Col>
-                <Col md={12}>
+                <Col md={24}>
                   <LineChart
                     type="line"
                     id="bountiesIssuedCum"
@@ -144,7 +144,7 @@ class App extends Component {
                     }]}
                   />
                 </Col>
-                <Col md={12}>
+                <Col md={24}>
                   <LineChart
                     type="line"
                     id="uniqueUsers"
@@ -160,7 +160,7 @@ class App extends Component {
                     }]}
                   />
                 </Col>
-                <Col md={12}>
+                <Col md={24}>
                   <LineChart
                     type="line"
                     id="uniqueUsersCum"
@@ -176,7 +176,7 @@ class App extends Component {
                     }]}
                   />
                 </Col>
-                <Col md={12}>
+                <Col md={24}>
                   <LineChart
                     type="line"
                     id="totalFulfillmentAmount"
@@ -189,7 +189,7 @@ class App extends Component {
                     }]}
                   />
                 </Col>
-                <Col md={12}>
+                <Col md={24}>
                   <PieChart
                     type="pie"
                     id="categories"
@@ -203,7 +203,7 @@ class App extends Component {
                     }]}
                   />
                 </Col>
-                <Col md={12}>
+                <Col md={24}>
                   <PieChart
                     type="pie"
                     id="tokens"

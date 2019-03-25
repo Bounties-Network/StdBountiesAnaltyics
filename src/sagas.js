@@ -58,7 +58,7 @@ function parseData(raw) {
 
   for (let i = 0; i < tokenData.length; i += 1) {
     tokens.push([tokenData[i].token_symbol, tokenData[i].total_count]);
-  } 
+  }
 
   for (let i = 0; i < timelineData.length; i += 1) {
     const date = Date.parse(timelineData[i].date);
